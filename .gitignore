@@ -1,0 +1,39 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# Database files
+*.sqlite3
+db.sqlite3
+
+# Logs
+*.log
+
+# Static files
+staticfiles/
+
+# Media files
+media/
+
+# IDE configurations
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# MacOS specific
+.DS_Store
+
+# Test and coverage
+.coverage
+coverage.xml
+
+# Other
+*.bak
+*.swp
