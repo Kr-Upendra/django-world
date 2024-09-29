@@ -1,15 +1,20 @@
 from rest_framework import serializers
-from .models import Product 
+from store.models import Product, Category 
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category    
+        fields = ['id', 'title']
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
-    title = serializers.CharField(max_length=255)
-    price = serializers.DecimalField(max_digits=6,decimal_places=2)
+    # category = CategorySerializer()
 
     class Meta:
         model = Product    
-        fields = ["id", "title", "price"]    
+        fields = ['id', 'title', 'slug', 'description', 'quantity', 'price', 'category'] # to select all fields use this '__all__'
     
 
         
+
