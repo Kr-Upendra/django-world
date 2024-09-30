@@ -1,8 +1,8 @@
 from django.db import models
 
 class Category(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(default='-')
+    title = models.CharField(max_length=255,unique=True)
+    slug = models.SlugField(default='-',unique=True)
     description = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -12,8 +12,8 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(default='-')
+    title = models.CharField(max_length=255,unique=True)
+    slug = models.SlugField(default='-',unique=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=6,decimal_places=2)
     quantity = models.IntegerField()
@@ -46,7 +46,8 @@ class Address(models.Model):
     country = models.CharField(max_length=255,null=True)
     zip_code = models.CharField(max_length=6,default='000000')
     customer = models.ForeignKey(Customer,on_delete=models.CASCADE)
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Order(models.Model):
     ORDER_STATUS_PENDING = 'P'
@@ -71,6 +72,7 @@ class OrderItem(models.Model):
 
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
