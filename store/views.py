@@ -1,41 +1,33 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from . import models
 from .serializers import ProductSerializer, ProductCreateSerializer, CategorySerializer, CategoryCreateSerializer
 
 
-class ProductList(APIView):
-    def get(self, request):
-        queryset = models.Product.objects.select_related('category').all()
-        serializer = ProductSerializer(queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+class ProductList(ListCreateAPIView):
+    queryset = models.Product.objects.select_related('category').all()
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST']:
+            return ProductCreateSerializer
+        return ProductSerializer
     
-    def post(self, request):
-        serializer = ProductCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'message': 'Product created successfully'}, status=status.HTTP_201_CREATED)
+    def get_serializer_context(self):
+        return {'request': self.request}
 
 
-class ProductDetail(APIView):
-    def get_object(self, pk):
-        product = get_object_or_404(models.Product, pk=pk)
-        return product
-    
-    def get(self, request, pk):
-        product = self.get_object(pk)
-        serializer = ProductSerializer(product, context={'request': request})
-        return Response(serializer.data)
-    
-    def patch(self, request, pk):
-        product = self.get_object(pk)
-        serializer = ProductCreateSerializer(product, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'message': 'Product updated successfully'}, status=status.HTTP_200_OK)
+class ProductDetail(RetrieveUpdateDestroyAPIView):
+    queryset = models.Product.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method in ['PATCH', 'PUT']:
+            return ProductCreateSerializer
+        return ProductSerializer
     
     def delete(self, request, pk):
         product = self.get_object(pk)
@@ -45,35 +37,24 @@ class ProductDetail(APIView):
         return Response({'message': 'Product deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
 
 
-class CategoryList(APIView):
-    def get(self, request):
-        categories = models.Category.objects.all()
-        serializer = CategorySerializer(categories, many=True, context={'request': request})
-        return Response(serializer.data) 
+class CategoryList(ListCreateAPIView):
+    queryset = models.Category.objects.all()
 
-    def post(self, request):
-        serializer = CategoryCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'message': 'Category created successfully'}, status=status.HTTP_201_CREATED)
+    def get_serializer_class(self):
+        if self.request.method in ['POST']:
+            return CategoryCreateSerializer
+        return CategorySerializer
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
+    
+class CategoryDetail(RetrieveUpdateDestroyAPIView):
+    queryset = models.Category.objects.all()
 
-
-class CategoryDetail(APIView):
-    def get_object(self, pk):
-        category = get_object_or_404(models.Category, pk=pk)
-        return category
-
-    def get(self, request, pk):
-        category = self.get_object(pk)
-        serializer = CategorySerializer(category, context={'request': request})
-        return Response(serializer.data)
-
-    def patch(self, request, pk):
-        category = self.get_object(pk)
-        serializer = CategoryCreateSerializer(category, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'message': 'Category updated successfully'}, status=status.HTTP_200_OK)
+    def get_serializer_class(self):
+        if self.request.method in ['PATCH', 'PUT']:
+            return CategoryCreateSerializer
+        return CategorySerializer
 
     def delete(self, request, pk):
         category = self.get_object(pk)
