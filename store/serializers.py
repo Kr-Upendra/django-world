@@ -4,7 +4,7 @@ from store.models import Product, Category
 
 class CategorySerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='category_detail',
+        view_name='category-detail',
         lookup_field='pk'
     )
 
@@ -34,7 +34,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'slug', 'description', 'quantity', 'price', 'category', 'created_at', 'updated_at', 'url']  # Include 'url' field    
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='product_detail',
+        view_name='product-detail',
         lookup_field='pk'
     )
 
