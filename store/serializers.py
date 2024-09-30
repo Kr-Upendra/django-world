@@ -10,7 +10,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     # category = CategorySerializer()
-
     class Meta:
         model = Product    
         fields = ['id', 'title', 'slug', 'description', 'quantity', 'price', 'category'] # to select all fields use this '__all__'

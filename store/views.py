@@ -19,8 +19,15 @@ def product_list(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         
 
-@api_view()
-def product_detail(request, id):
-    product = get_object_or_404(pk=id)
-    serializer = ProductSerializer(product)
-    return Response(serializer.data)
+@api_view(['GET', 'PUT', 'DELETE'])
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'GET':
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        return Response('working update route', status=status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        result = product.delete();
+        return Response(result, status=status.HTTP_204_NO_CONTENT)
+
